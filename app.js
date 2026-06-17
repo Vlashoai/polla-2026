@@ -25,7 +25,7 @@ const PARTICIPANTS = [
   'Ali', 'Osmar', 'Vlasho',
   'Participante 4', 'Participante 5', 'Participante 6',
   'Participante 7', 'Participante 8', 'Participante 9',
-  'Participante 10', 'Participante 11', 'Participante 12',
+  ''Omar'', 'Participante 11', 'Participante 12',
   'Participante 13', 'Participante 14', 'Participante 15',
   'Participante 16', 'Participante 17', 'Participante 18',
   'Participante 19', 'Participante 20'
