@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pronósticos Grupos – Polla 2026</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<main class="page-content">
+  <div class="page-header">
+    <h2 class="page-title">⚽ Pronósticos – Fase de Grupos</h2>
+    <p class="page-sub">Selecciona G1, E o G2. Se bloquean al iniciar cada partido.</p>
+  </div>
+  <div id="groupsContainer" class="groups-container">
+    <div class="loading-state">Cargando partidos...</div>
+  </div>
+</main>
+
+<script src="../app.js"></script>
+<script>
+  const user = buildNav('grupos');
+  if (!user) throw new Error('no user');
+
+  let allPicks = {}, allResults = {};
+
+  async function loadData() {
+    allPicks = await getAllPicks();
+    allResults = await getAllResults();
+    render();
+  }
+  loadData();
+
+  function render() {
+    const container = document.getElementById('groupsContainer');
+    container.innerHTML = '';
+
+    const groups = {};
+    GROUP_MATCHES.forEach(m => {
+      if (!groups[m.grupo]) groups[m.grupo] = [];
+      groups[m.grupo].push(m);
+    });
+
+    Object.entries(groups).forEach(([grupo, matches]) => {
+      const section = document.createElement('div');
+      section.className = 'match-group';
+      section.innerHTML = `<h3 class="group-label">${grupo}</h3>`;
+
+      matches.forEach(m => {
+        const key = 'p' + m.id;
+        const userPick = (allPicks[user] && allPicks[user][key]) || null;
+        const result = allResults[key];
+        const realResult = result ? resultFromGoals(result.g1, result.g2) : null;
+        const locked = matchStarted(m);
+        const hasScore = result && result.g1 !== undefined && result.g2 !== undefined;
+
+        const card = document.createElement('div');
+        card.className = `match-card ${locked ? 'locked' : ''}`;
+        card.innerHTML = `
+          <div class="match-meta">
+            <span class="match-date">${formatDate(m.fecha)} ${m.hora} (CDMX)${isDifferentTimezone() ? ` · ${formatLocalTime(m.fecha, m.hora)} (tu hora)` : ''}</span>
+            ${locked ? '<span class="badge-locked">🔒 Bloqueado</span>' : ''}
+            ${hasScore ? `<span class="badge-score">⚽ ${m.eq1} ${result.g1}–${result.g2} ${m.eq2}</span>` : ''}
+          </div>
+          <div class="match-teams">
+            <span class="team-name eq1">${m.eq1}</span>
+            <span class="vs-sep">vs</span>
+            <span class="team-name eq2">${m.eq2}</span>
+          </div>
+          <div class="pick-buttons" id="btns-${m.id}"></div>
+        `;
+        section.appendChild(card);
+
+        const btnsDiv = card.querySelector(`#btns-${m.id}`);
+        [['G1', m.eq1], ['E', 'Empate'], ['G2', m.eq2]].forEach(([value, label]) => {
+          const btn = document.createElement('button');
+          btn.className = 'pick-btn';
+          btn.textContent = value === 'E' ? 'E' : (value === 'G1' ? '← ' + label : label + ' →');
+          if (userPick === value) {
+            btn.classList.add('selected');
+            if (realResult) btn.classList.add(value === realResult ? 'correct' : 'wrong');
+          }
+          if (locked) btn.disabled = true;
+          else {
+            btn.addEventListener('click', async () => {
+              await savePick(user, m.id, value);
+              if (!allPicks[user]) allPicks[user] = {};
+              allPicks[user][key] = value;
+              render();
+              showToast('✅ Guardado');
+            });
+          }
+          btnsDiv.appendChild(btn);
+        });
+      });
+      container.appendChild(section);
+    });
+  }
+</script>
+</body>
+</html>
