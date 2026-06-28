@@ -22,13 +22,7 @@ const ADMIN_PIN = '2026';
 // ============================================================
 
 const PARTICIPANTS = [
-  'Osmar', 'Vlasho',
-  'Omar Ali', 'Participante 5', 'Participante 6',
-  'Participante 7', 'Participante 8', 'Participante 9',
-  'Omar', 'Participante 11', 'Participante 12',
-  'Participante 13', 'Participante 14', 'Participante 15',
-  'Participante 16', 'Participante 17', 'Participante 18',
-  'Participante 19', 'Participante 20'
+  'Osmar', 'Vlasho', 'Omar Ali'
 ];
 
 const POINTS = {
@@ -62,7 +56,7 @@ const GROUP_MATCHES = [
   {id:18,fecha:'2026-06-16',hora:'18:00',grupo:'Grupo I',eq1:'Irak',eq2:'Noruega'},
   {id:19,fecha:'2026-06-16',hora:'21:00',grupo:'Grupo J',eq1:'Argentina',eq2:'Argelia'},
   {id:20,fecha:'2026-06-16',hora:'00:00',grupo:'Grupo J',eq1:'Austria',eq2:'Jordania'},
-  {id:21,fecha:'2026-06-17',hora:'13:00',grupo:'Grupo K',eq1:'Portugal',eq2:'Rep. Dem. Congo'},
+  {id:21,fecha:'2026-06-17',hora:'11:00',grupo:'Grupo K',eq1:'Portugal',eq2:'Rep. Dem. Congo'},
   {id:22,fecha:'2026-06-17',hora:'16:00',grupo:'Grupo L',eq1:'Inglaterra',eq2:'Croacia'},
   {id:23,fecha:'2026-06-17',hora:'19:00',grupo:'Grupo L',eq1:'Ghana',eq2:'Panamá'},
   {id:24,fecha:'2026-06-17',hora:'22:00',grupo:'Grupo K',eq1:'Uzbekistán',eq2:'Colombia'},
@@ -340,7 +334,7 @@ function buildNav(activePage) {
   nav.className = 'top-nav';
   nav.innerHTML = `
     <div class="nav-inner">
-      <a href="../index.html" class="nav-logo">POLLA <span>2026</span></a>
+      <a href="../index.html" class="nav-logo">BROTHERS <span>2026</span></a>
       <div class="nav-user">👤 ${user}</div>
       <div class="nav-links">
         ${pages.map(p => `<a href="${p.href}" class="nav-link ${p.id === activePage ? 'active' : ''}">${p.label}</a>`).join('')}
